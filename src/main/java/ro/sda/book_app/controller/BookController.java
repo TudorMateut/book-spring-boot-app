@@ -43,4 +43,20 @@ public class BookController {
                 .status(HttpStatus.OK)
                 .body(result);
     }
+
+    @DeleteMapping(value = "/delete-book-by-id")
+    public ResponseEntity<String> deleteById(@RequestParam(name = "id", required = true) long id) {
+        bookService.deleteById(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @PutMapping(value = "/update-book")
+    public ResponseEntity<Void> update(@RequestBody @Valid Book book) {
+        bookService.update(book);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .build();
+    }
 }

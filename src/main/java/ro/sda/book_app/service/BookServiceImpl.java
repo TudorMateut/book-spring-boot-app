@@ -38,17 +38,27 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void update(Book book) {
-
+        log.info("Fetching book with id: {}", book.getId());
+        bookRepository.findById(book.getId()).orElseThrow(() -> new NotFoundException(String.format
+                ("Book with id (%s) could not be found", book.getId())));
+        log.info("Updating book with id: {}", book.getId());
+        bookRepository.save(book);
     }
 
     @Override
     public void deleteById(long id) {
-
+        log.info("Fetching book with id: {}", id);
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()) {
+            throw new NotFoundException(String.format("Book with id (%s) could not be found", id));
+        }
+        log.info("Deleting book with id: {}", id);
+        bookRepository.deleteById(id);
     }
 
     @Override
     public Book findById(long id) {
-        log.info("Fetching book with id {}", id);
+        log.info("Fetching book with id: {}", id);
         Optional<Book> optionalBook = bookRepository.findById(id);
 
         if (optionalBook.isPresent()) {
@@ -56,5 +66,11 @@ public class BookServiceImpl implements BookService {
         } else {
             throw new NotFoundException(String.format("Book with id (%s) could not be found", id));
         }
+    }
+
+    public Book findByIdFunctional(long id) {
+        log.info("Fetching book with id {}", id);
+        return bookRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format
+                ("Book with id (%s) could not be found", id)));
     }
 }
